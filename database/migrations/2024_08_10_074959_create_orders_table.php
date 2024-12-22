@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['Pending', 'Delivered', 'Out for delivery', 'Canceled'])->default('Pending');
+            $table->string('status')->default('Pending');
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('location_id')->unsigned();
             $table->decimal('total_price', 12, 2);

@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
+    public function index()
+    {
+
+        $locations = location::orderBy('created_at','desc')
+        ->paginate(6);
+        
+        return response()->json($locations);
+    }
+
     public function store(Request $request){
         $request->validate([
             "street" => "required",
@@ -23,6 +32,18 @@ class LocationController extends Controller
         ]);
 
         return response()->json(['message'=>'Location added'],201);
+    }
+
+    public function search(Request $request)
+    {
+
+        $input=$request->all();
+
+        $locations = location::where('area','LIKE','%'.$input['searchTerm'].'%')
+            ->orderBy('created_at','asc')
+            ->paginate(20);
+
+        return response()->json($locations,200);
     }
 
     public function update($Id, Request $request){

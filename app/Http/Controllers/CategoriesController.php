@@ -16,6 +16,18 @@ class CategoriesController extends Controller
         return response()->json($categories,200);
     }
 
+    public function search(Request $request)
+    {
+
+        $input=$request->all();
+
+        $categories = categories::where('name','LIKE','%'.$input['searchTerm'].'%')
+            ->orderBy('created_at','asc')
+            ->paginate(20);
+
+        return response()->json($categories,200);
+    }
+
     public function categories()
     {
         $categories = categories::orderBy('created_at','asc')->get();
@@ -38,7 +50,6 @@ class CategoriesController extends Controller
         try{
             $validated = $request->validate([
                 'name' => 'required|unique:categories,name',
-                'image' => 'required'
             ]);
 
             $category = new categories();
@@ -50,9 +61,9 @@ class CategoriesController extends Controller
                 $filename = time() . '.' . $ext;
                 $file->move('assets/uploads/category', $filename);
                 $category->image = $filename;
-                $category->name = $request->name;
-                $category->save();
             }
+            $category->name = $request->name;
+            $category->save();
             
             return response()->json(['message' => 'Category added'],201);
 

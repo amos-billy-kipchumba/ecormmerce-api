@@ -21,8 +21,12 @@ class orders extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function location() {
-        return $this->belongsTo(location::class, 'location_id');
+    public function location(){
+        return $this->hasOne('App\Models\location', 'id', 'location_id');
+    } 
+
+    public function items(){
+        return $this->hasMany('App\Models\order_items', 'order_id', 'id');
     }
 
 }

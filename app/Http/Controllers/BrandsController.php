@@ -16,6 +16,25 @@ class BrandsController extends Controller
         return response()->json($brands,200);
     }
 
+    public function brands()
+    {
+        $brands = brands::orderBy('created_at','asc')->get();
+
+        return response()->json($brands, 200);
+    }
+
+    public function search(Request $request)
+    {
+
+        $input=$request->all();
+
+        $brands = brands::where('name','LIKE','%'.$input['searchTerm'].'%')
+            ->orderBy('created_at','asc')
+            ->paginate(20);
+
+        return response()->json($brands,200);
+    }
+
     // retrieve the brand by ID
     public function show($Id){
         $brand = Brands::find($Id);

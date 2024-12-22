@@ -21,9 +21,10 @@ class UserController extends Controller
 
         $users = User::when(Auth::user()->role_id !== 1, function ($query) {
             return $query->where('id', '=', Auth::user()->id);
-        })->orderBy('created_at','desc')->paginate(20);
-
-        return UserResource::collection($users)->preserveQuery();
+        })->orderBy('created_at','desc')
+        ->paginate(6);
+        
+        return response()->json($users);
     }
 
     public function users()
@@ -39,11 +40,10 @@ class UserController extends Controller
 
     public function search(Request $request)
     {
+
         $input=$request->all();
 
-        $users = User::when(Auth::user()->role_id !== 1, function ($query) {
-            return $query->where('id', '=', Auth::user()->id);
-        })->where('name','LIKE','%'.$input['searchTerm'].'%')
+        $users = User::where('name','LIKE','%'.$input['searchTerm'].'%')
             ->orderBy('created_at','asc')
             ->paginate(20);
 

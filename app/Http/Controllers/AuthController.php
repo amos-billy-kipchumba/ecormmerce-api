@@ -72,6 +72,32 @@ class AuthController extends Controller
             'user' => $user
         ], 201);
     }
+
+    public function updatePassword(Request $request) {
+
+        $input = $request->all();
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()->messages(),
+            ], 400);
+        }
+    
+        $user = User::where('id','=', $input['user_id'])->first();
+
+        $user->update([
+            'password'=>bcrypt($input['password'])
+        ]);
+    
+        return response()->json([
+            'message' => 'User password updated',
+            'user' => $user
+        ], 201);
+    }
     
 
 
